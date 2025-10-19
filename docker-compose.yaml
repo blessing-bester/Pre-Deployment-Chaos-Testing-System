@@ -5,7 +5,7 @@ services:
     build: ./service-a
     container_name: service-a
     ports:
-      - "8000:8000"   
+      - "8002:8002"   
     networks:
       - chaosnet
 
@@ -17,7 +17,7 @@ services:
     depends_on:
       - service-a
     environment:
-      - SERVICE_A_URL=http://service-a:8000/data
+      - SERVICE_A_URL=http://service-a:8002/data
     networks:
       - chaosnet
 
