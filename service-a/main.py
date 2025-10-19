@@ -1,7 +1,7 @@
-from fastapi import fastapi
+from fastapi import FastAPI
 import time, random
 from prometheus_client import Counter, Histogram, generate_latest
-from fastapi.respones import Response 
+from fastapi.responses import Response 
 
 app = FastAPI(title="Service A - Data Provider")
 
@@ -25,8 +25,8 @@ def get_data():
     LATENCY.labels(endpoint="/data").observe(time.time() - start)
 
     sample_data = {
-        "id": random.randint(1, 100)
-        "value": random.choice(["one", "two", "three", "four"])
+        "id": random.randint(1, 100),
+        "value": random.choice(["one", "two", "three", "four"]),
         "delay": round(delay, 3)
     }
     return sample_data
@@ -36,4 +36,3 @@ def metrics():
     return Response(generate_latest(), media_type="text/plain")
 
 
-    
