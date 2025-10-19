@@ -1,0 +1,51 @@
+name: Chaos Pre-Deployment Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  chaos-test:
+    runs-on: ubuntu-latest
+
+    services:
+      docker:
+        image: docker:20.10.16
+        options: --privileged
+        ports:
+          - 8000:8000
+          - 8001:8001
+          - 9090:9090
+          - 3000:3000
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+
+      - name: Set up Docker Compose
+        uses: docker/setup-buildx-action@v2
+
+
+      - name: Build and start services
+        run: docker-compose up -d --build
+
+      - name: Run chaos experiments
+        run: |
+          python chaos_scripts/kill_service.py &
+          python chaos_scripts/network_delay.py &
+          python chaos_scripts/resource_spike.py &
+          python chaos_scripts/db_failure.py &
+          sleep 60  # run chaos for 60 seconds
+          pkill -f python
+
+      - name: Generate chaos report
+        run: python chaos_scripts/generate_report.py
+
+      - name: Upload report
+        uses: actions/upload-artifact@v3
+        with:
+          name: chaos-report
+          path: reports/chaos_report.json
