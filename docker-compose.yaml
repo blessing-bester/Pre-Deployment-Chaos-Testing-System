@@ -5,7 +5,7 @@ services:
     build: ./service-a
     container_name: service-a
     ports:
-      - "8080:8000"   # Expose container port 8000 to host 8080
+      - "8000:8000"   
     networks:
       - chaosnet
 
@@ -27,7 +27,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./observability/prometheus.yaml:/etc/prometheus/prometheus.yaml
     networks:
       - chaosnet
 
