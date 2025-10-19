@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import time, requests
 from prometheus_client import Counter, Histogram, generate_latest
-from fastapi.responses import responses
+from fastapi.responses import Response
 
 app = FastAPI(title="Service B - Data Consumer")
 
@@ -9,7 +9,7 @@ REQUEST_COUNT = Counter("service_b_total_requests", "Total requests to Service B
 LATENCY = Histogram("service_b_latency_seconds", "Latency for each request made", ["endpoint"])
 FAILURES = Counter("service_b_total_failures", "Failures calling service A")
 
-SERVICE_A_URL = "https://service-a:8000/data"
+SERVICE_A_URL = "http://127.0.0.1:8080/data"
 
 @app.get("/")
 def root():
